@@ -13,8 +13,8 @@ const ReportsPage = () => {
 
   return (
     <div className="reports-page fade-in">
-      <h1>Rapports et Analyses</h1>
-      <p>Consultez les rapports détaillés de votre boutique</p>
+      <h1>Reports and Analytics</h1>
+      <p>View detailed reports for your store</p>
 
       <div className="reports-container">
         <div className="report-tabs">
@@ -35,16 +35,16 @@ const ReportsPage = () => {
         <div className="report-content">
           {activeReport === "stock" && (
             <div className="report-section">
-              <h2>Rapport de Vérification du Stock</h2>
-              <p>Vérifiez si tous les articles d'un panier sont en stock</p>
+              <h2>Stock Verification Report</h2>
+              <p>Check if all items in a cart are in stock</p>
               <StockReport />
             </div>
           )}
 
           {activeReport === "purchase" && (
             <div className="report-section">
-              <h2>Rapport des Achats par Client</h2>
-              <p>Consultez le total des dépenses de chaque client</p>
+              <h2>Customer Purchase Report</h2>
+              <p>View the total spending of each customer</p>
               <PurchaseReport />
             </div>
           )}

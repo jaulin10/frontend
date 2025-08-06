@@ -1,0 +1,80 @@
+/* Conteneur principal */
+.admin-page {
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.admin-page h1 {
+  font-size: 2rem;
+  color: #4a2c2a; /* Brun café */
+  margin-bottom: 10px;
+}
+
+.admin-page p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Tabs container */
+.section-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background: #f1f1f1;
+}
+
+.tab-button.active {
+  background: #4a2c2a;
+  color: #fff;
+  border-color: #4a2c2a;
+  font-weight: bold;
+}
+
+/* Section content */
+.section-content {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #e0d6d1;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.admin-section h2 {
+  font-size: 1.3rem;
+  color: #4a2c2a;
+  margin-bottom: 15px;
+}
+
+/* Animation d’apparition */
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

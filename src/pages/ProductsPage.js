@@ -11,10 +11,10 @@ const ProductsPage = () => {
   const [activeTab, setActiveTab] = useState("add");
 
   const tabs = [
-    { id: "add", label: "Ajouter Produit", icon: "➕" },
-    { id: "edit", label: "Modifier Description", icon: "✏️" },
-    { id: "search", label: "Rechercher", icon: "🔍" },
-    { id: "list", label: "Liste Produits", icon: "📋" },
+    { id: "add", label: "Add Product", icon: "➕" },
+    { id: "edit", label: "Edit Description", icon: "✏️" },
+    { id: "search", label: "Search", icon: "🔍" },
+    { id: "list", label: "Product List", icon: "📋" },
   ];
 
   return (

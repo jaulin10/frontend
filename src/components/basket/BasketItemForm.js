@@ -25,7 +25,7 @@ const BasketItemForm = ({ onItemAdded }) => {
       const response = await axios.get("/products");
       setProducts(response.data);
     } catch (error) {
-      console.error("Erreur lors du chargement des produits:", error);
+      console.error("Error loading products:", error);
     }
   };
 
@@ -34,7 +34,7 @@ const BasketItemForm = ({ onItemAdded }) => {
       const response = await axios.get("/baskets");
       setBaskets(response.data);
     } catch (error) {
-      console.error("Erreur lors du chargement des paniers:", error);
+      console.error("Error loading carts:", error);
     }
   };
 
@@ -52,11 +52,11 @@ const BasketItemForm = ({ onItemAdded }) => {
         formCode: parseInt(data.formCode),
       });
 
-      setMessage("Article ajouté au panier avec succès!");
+      setMessage("Item added to cart successfully!");
       reset();
       if (onItemAdded) onItemAdded();
     } catch (error) {
-      setMessage("Erreur lors de l'ajout: " + error.message);
+      setMessage("Error adding item: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -66,15 +66,15 @@ const BasketItemForm = ({ onItemAdded }) => {
     <div className="basket-item-form">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form-group">
-          <label className="form-label">Panier *</label>
+          <label className="form-label">Basket *</label>
           <select
             className="form-select"
-            {...register("basketId", { required: "Sélectionnez un panier" })}
+            {...register("basketId", { required: "Select a basket" })}
           >
-            <option value="">-- Choisir un panier --</option>
+            <option value="">-- Choose a basket --</option>
             {baskets.map((basket) => (
               <option key={basket.id} value={basket.id}>
-                Panier #{basket.id} - ${basket.total || 0}
+                Basket #{basket.id} - ${basket.total || 0}
               </option>
             ))}
           </select>
@@ -84,12 +84,12 @@ const BasketItemForm = ({ onItemAdded }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Produit *</label>
+          <label className="form-label">Product *</label>
           <select
             className="form-select"
-            {...register("productId", { required: "Sélectionnez un produit" })}
+            {...register("productId", { required: "Select a product" })}
           >
-            <option value="">-- Choisir un produit --</option>
+            <option value="">-- Choose a product --</option>
             {products.map((product) => (
               <option
                 key={product.id || product.idproduct}
@@ -106,7 +106,7 @@ const BasketItemForm = ({ onItemAdded }) => {
 
         <div className="grid grid-2">
           <div className="form-group">
-            <label className="form-label">Quantité *</label>
+            <label className="form-label">Quantity *</label>
             <input
               type="number"
               min="1"
@@ -123,13 +123,13 @@ const BasketItemForm = ({ onItemAdded }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Prix *</label>
+            <label className="form-label">Price *</label>
             <input
               type="number"
               step="0.01"
               min="0"
               className="form-input"
-              {...register("price", { required: "Prix requis", min: 0 })}
+              {...register("price", { required: "Price required", min: 0 })}
             />
             {errors.price && (
               <span className="error-message">{errors.price.message}</span>
@@ -142,11 +142,11 @@ const BasketItemForm = ({ onItemAdded }) => {
             <label className="form-label">Taille *</label>
             <select
               className="form-select"
-              {...register("sizeCode", { required: "Sélectionnez une taille" })}
+              {...register("sizeCode", { required: "Select a size" })}
             >
-              <option value="">-- Taille --</option>
-              <option value="1">Petit (1)</option>
-              <option value="2">Grand (2)</option>
+              <option value="">-- Size --</option>
+              <option value="1">Small (1)</option>
+              <option value="2">Large (2)</option>
             </select>
             {errors.sizeCode && (
               <span className="error-message">{errors.sizeCode.message}</span>
@@ -157,11 +157,11 @@ const BasketItemForm = ({ onItemAdded }) => {
             <label className="form-label">Format *</label>
             <select
               className="form-select"
-              {...register("formCode", { required: "Sélectionnez un format" })}
+              {...register("formCode", { required: "Select a format" })}
             >
               <option value="">-- Format --</option>
-              <option value="3">Moulu (3)</option>
-              <option value="4">Grains entiers (4)</option>
+              <option value="3">Ground (3)</option>
+              <option value="4">Whole Beans (4)</option>
             </select>
             {errors.formCode && (
               <span className="error-message">{errors.formCode.message}</span>
@@ -170,13 +170,13 @@ const BasketItemForm = ({ onItemAdded }) => {
         </div>
 
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Ajout..." : "Ajouter au Panier"}
+          {loading ? "Adding..." : "Add to Cart"}
         </button>
 
         {message && (
           <div
             className={`alert ${
-              message.includes("succès") ? "alert-success" : "alert-error"
+              message.includes("success") ? "alert-success" : "alert-error"
             }`}
           >
             {message}

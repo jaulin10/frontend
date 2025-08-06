@@ -27,20 +27,20 @@ const ProductList = ({
       const response = await axios.get("/products");
       setProducts(response.data);
     } catch (error) {
-      setError("Erreur lors du chargement des produits: " + error.message);
-      console.error("Erreur:", error);
+      setError("Error loading products: " + error.message);
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (productId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(`/products/${productId}`);
         setProducts((prev) => prev.filter((p) => p.id !== productId));
       } catch (error) {
-        setError("Erreur lors de la suppression: " + error.message);
+        setError("Error deleting product: " + error.message);
       }
     }
   };
@@ -54,15 +54,15 @@ const ProductList = ({
       {error && <div className="alert alert-error mb-3">{error}</div>}
 
       <div className="list-header flex-between mb-3">
-        <h3>Produits ({products.length})</h3>
+        <h3>Products ({products.length})</h3>
         <button onClick={fetchProducts} className="btn btn-secondary">
-          🔄 Actualiser
+          🔄 Refresh
         </button>
       </div>
 
       {products.length === 0 ? (
         <div className="no-data">
-          <p>Aucun produit trouvé</p>
+          <p>No products found</p>
         </div>
       ) : (
         <div className="table-container">
@@ -71,11 +71,11 @@ const ProductList = ({
               <tr>
                 <th>ID</th>
                 <th>Image</th>
-                <th>Nom</th>
+                <th>Name</th>
                 <th>Description</th>
-                <th>Prix</th>
+                <th>Price</th>
                 <th>Stock</th>
-                <th>Statut</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>

@@ -27,9 +27,9 @@ const ProductSearch = () => {
       });
       setSearchResults(response.data);
     } catch (error) {
-      setError("Erreur lors de la recherche: " + error.message);
+      setError("Error while searching: " + error.message);
       setSearchResults([]);
-      console.error("Erreur de recherche:", error);
+      console.error("Error while searching:", error);
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ const ProductSearch = () => {
             <input
               type="text"
               className="form-input search-input"
-              placeholder="Entrez le nom du produit à rechercher..."
+              placeholder="Enter the name of the product to search for..."
               {...register("searchTerm", { required: true })}
             />
             <button
@@ -59,7 +59,7 @@ const ProductSearch = () => {
               className="btn btn-primary search-button"
               disabled={loading}
             >
-              {loading ? "🔍 Recherche..." : "🔍 Rechercher"}
+              {loading ? "🔍 Searching..." : "🔍 Search"}
             </button>
             <button
               type="button"
@@ -81,9 +81,9 @@ const ProductSearch = () => {
           <div className="results-section">
             <div className="results-header">
               <h3>
-                Résultats de recherche
-                {searchTerm && ` pour "${searchTerm}"`}({searchResults.length}{" "}
-                produit{searchResults.length > 1 ? "s" : ""} trouvé
+                Search results
+                {searchTerm && ` for "${searchTerm}"`}({searchResults.length}{" "}
+                product{searchResults.length > 1 ? "s" : ""} found
                 {searchResults.length > 1 ? "s" : ""})
               </h3>
             </div>
@@ -93,8 +93,8 @@ const ProductSearch = () => {
             ) : (
               <div className="no-results">
                 <div className="no-results-icon">🔍</div>
-                <h4>Aucun produit trouvé</h4>
-                <p>Essayez avec un autre terme de recherche</p>
+                <h4>No products found</h4>
+                <p>Try a different search term</p>
               </div>
             )}
           </div>
@@ -103,8 +103,8 @@ const ProductSearch = () => {
         {!hasSearched && (
           <div className="search-placeholder">
             <div className="search-placeholder-icon">☕</div>
-            <h4>Recherche de Produits</h4>
-            <p>Entrez un nom de produit pour commencer la recherche</p>
+            <h4>Product Search</h4>
+            <p>Enter a product name to start searching</p>
           </div>
         )}
       </div>

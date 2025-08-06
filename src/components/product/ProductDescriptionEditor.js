@@ -44,8 +44,8 @@ const ProductDescriptionEditor = () => {
       const response = await axios.get("/products");
       setProducts(response.data);
     } catch (error) {
-      console.error("Erreur lors du chargement des produits:", error);
-      setMessage("Erreur lors du chargement des produits");
+      console.error("Error loading products:", error);
+      setMessage("Error loading products");
     } finally {
       setLoadingProducts(false);
     }
@@ -53,7 +53,7 @@ const ProductDescriptionEditor = () => {
 
   const onSubmit = async (data) => {
     if (!selectedProduct) {
-      setMessage("Veuillez sélectionner un produit");
+      setMessage("Please select a product to update.");
       return;
     }
 
@@ -70,9 +70,9 @@ const ProductDescriptionEditor = () => {
         }
       );
 
-      setMessage("Description mise à jour avec succès!");
+      setMessage("Description updated successfully!");
 
-      // Mettre à jour la liste des produits
+      // Update the product list
       setProducts((prev) =>
         prev.map((product) =>
           (product.id || product.idproduct) ===
@@ -82,14 +82,14 @@ const ProductDescriptionEditor = () => {
         )
       );
 
-      // Mettre à jour la description courante affichée
+      // Update the currently displayed description
       setValue("currentDescription", data.newDescription);
 
-      // Réinitialiser le champ nouvelle description
+      // Reset the new description field
       setValue("newDescription", "");
     } catch (error) {
-      setMessage("Erreur lors de la mise à jour: " + error.message);
-      console.error("Erreur:", error);
+      setMessage("Error updating description: " + error.message);
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -105,17 +105,17 @@ const ProductDescriptionEditor = () => {
     <div className="description-editor">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form-group">
-          <label className="form-label">Sélectionner un Produit *</label>
+          <label className="form-label">Select a Product *</label>
           {loadingProducts ? (
-            <div className="loading-text">Chargement des produits...</div>
+            <div className="loading-text">Loading products...</div>
           ) : (
             <select
               className="form-select"
               {...register("productId", {
-                required: "Veuillez sélectionner un produit",
+                required: "Please select a product",
               })}
             >
-              <option value="">-- Choisir un produit --</option>
+              <option value="">-- Choose a product --</option>
               {products.map((product) => (
                 <option
                   key={product.id || product.idproduct}
@@ -134,17 +134,17 @@ const ProductDescriptionEditor = () => {
         {selectedProduct && (
           <div className="product-info">
             <div className="info-card">
-              <h4>Informations du Produit</h4>
+              <h4>Product Information</h4>
               <div className="product-details">
                 <p>
                   <strong>ID:</strong>{" "}
                   {selectedProduct.id || selectedProduct.idproduct}
                 </p>
                 <p>
-                  <strong>Nom:</strong> {selectedProduct.productname}
+                  <strong>Name:</strong> {selectedProduct.productname}
                 </p>
                 <p>
-                  <strong>Prix:</strong> $
+                  <strong>Price:</strong> $
                   {parseFloat(selectedProduct.price || 0).toFixed(2)}
                 </p>
               </div>
@@ -153,7 +153,7 @@ const ProductDescriptionEditor = () => {
         )}
 
         <div className="form-group">
-          <label className="form-label">Description Actuelle</label>
+          <label className="form-label">Current Description</label>
           <textarea
             className="form-input current-description"
             rows="3"
@@ -161,23 +161,23 @@ const ProductDescriptionEditor = () => {
             {...register("currentDescription")}
             placeholder={
               selectedProduct
-                ? "Description actuelle du produit..."
-                : "Sélectionnez un produit pour voir sa description"
+                ? "Current product description..."
+                : "Select a product to see its description"
             }
           />
         </div>
 
         <div className="form-group">
-          <label className="form-label">Nouvelle Description *</label>
+          <label className="form-label">New Description *</label>
           <textarea
             className="form-input"
             rows="4"
-            placeholder="Entrez la nouvelle description du produit..."
+            placeholder="Enter the new product description..."
             {...register("newDescription", {
-              required: "La nouvelle description est requise",
+              required: "New description is required",
               minLength: {
                 value: 10,
-                message: "La description doit contenir au moins 10 caractères",
+                message: "Description must be at least 10 characters long",
               },
             })}
           />
@@ -194,14 +194,14 @@ const ProductDescriptionEditor = () => {
             className="btn btn-primary"
             disabled={loading || !selectedProduct}
           >
-            {loading ? "🔄 Mise à jour..." : "💾 Mettre à jour la Description"}
+            {loading ? "🔄 Updating..." : "💾 Update Description"}
           </button>
           <button
             type="button"
             onClick={handleReset}
             className="btn btn-secondary ml-2"
           >
-            🗑️ Réinitialiser
+            🗑️ Reset
           </button>
         </div>
 

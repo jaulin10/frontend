@@ -17,7 +17,7 @@ const BasketManager = () => {
       const response = await axios.get("/baskets");
       setBaskets(response.data);
     } catch (error) {
-      setError("Erreur lors du chargement des paniers: " + error.message);
+      setError("Error loading carts: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -31,14 +31,14 @@ const BasketManager = () => {
 
       <div className="baskets-list">
         {baskets.length === 0 ? (
-          <p>Aucun panier trouvé</p>
+          <p>No baskets found</p>
         ) : (
           baskets.map((basket) => (
             <div key={basket.id} className="basket-item card">
               <div className="card-body">
-                <h4>Panier #{basket.id}</h4>
+                <h4>Basket #{basket.id}</h4>
                 <p>Total: ${basket.total || 0}</p>
-                <p>Articles: {basket.quantity || 0}</p>
+                <p>Items: {basket.quantity || 0}</p>
               </div>
             </div>
           ))

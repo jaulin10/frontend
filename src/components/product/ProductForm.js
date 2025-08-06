@@ -26,13 +26,13 @@ const ProductForm = ({ onProductAdded }) => {
         active: data.active ? 1 : 0,
       });
 
-      setMessage("Produit ajouté avec succès!");
+      setMessage("Product added successfully!");
       reset();
       if (onProductAdded) {
         onProductAdded((prev) => [...prev, response.data]);
       }
     } catch (error) {
-      setMessage("Erreur lors de l'ajout du produit: " + error.message);
+      setMessage("Error adding product: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -42,12 +42,12 @@ const ProductForm = ({ onProductAdded }) => {
     <div className="product-form">
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="form-group">
-          <label className="form-label">Nom du Produit *</label>
+          <label className="form-label">Product Name *</label>
           <input
             type="text"
             className="form-input"
             {...register("productName", {
-              required: "Le nom du produit est requis",
+              required: "Product name is required",
             })}
           />
           {errors.productName && (
@@ -61,7 +61,7 @@ const ProductForm = ({ onProductAdded }) => {
             className="form-input"
             rows="3"
             {...register("description", {
-              required: "La description est requise",
+              required: "Description is required",
             })}
           />
           {errors.description && (
@@ -70,7 +70,7 @@ const ProductForm = ({ onProductAdded }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Image (nom du fichier)</label>
+          <label className="form-label">Image (file name)</label>
           <input
             type="text"
             className="form-input"
@@ -80,12 +80,12 @@ const ProductForm = ({ onProductAdded }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Prix *</label>
+          <label className="form-label">Price *</label>
           <input
             type="number"
             step="0.01"
             className="form-input"
-            {...register("price", { required: "Le prix est requis", min: 0 })}
+            {...register("price", { required: "Price is required", min: 0 })}
           />
           {errors.price && (
             <span className="error-message">{errors.price.message}</span>
@@ -95,18 +95,18 @@ const ProductForm = ({ onProductAdded }) => {
         <div className="form-group">
           <label className="checkbox-label">
             <input type="checkbox" {...register("active")} defaultChecked />
-            Produit actif
+            Active Product
           </label>
         </div>
 
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Ajout en cours..." : "Ajouter le Produit"}
+          {loading ? "Adding..." : "Add Product"}
         </button>
 
         {message && (
           <div
             className={`alert ${
-              message.includes("succès") ? "alert-success" : "alert-error"
+              message.includes("success") ? "alert-success" : "alert-error"
             }`}
           >
             {message}

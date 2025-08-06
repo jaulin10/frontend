@@ -4,11 +4,11 @@ import "../../styles/components/Navigation.css";
 
 const Navigation = () => {
   const navItems = [
-    { path: "/", label: "Accueil", icon: "🏠" },
-    { path: "/products", label: "Produits", icon: "☕" },
-    { path: "/basket", label: "Panier", icon: "🛒" },
+    { path: "/", label: "Home", icon: "🏠" },
+    { path: "/products", label: "Products", icon: "☕" },
+    { path: "/basket", label: "Basket", icon: "🛒" },
     { path: "/admin", label: "Administration", icon: "⚙️" },
-    { path: "/reports", label: "Rapports", icon: "📊" },
+    { path: "/reports", label: "Reports", icon: "📊" },
   ];
 
   return (

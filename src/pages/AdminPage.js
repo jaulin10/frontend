@@ -8,15 +8,15 @@ const AdminPage = () => {
   const [activeSection, setActiveSection] = useState("tax");
 
   const sections = [
-    { id: "tax", label: "Calcul des Taxes", icon: "💰" },
-    { id: "shipping", label: "Statut Livraison", icon: "🚚" },
-    { id: "sales", label: "Vérification Promotions", icon: "🏷️" },
+    { id: "tax", label: "Tax Calculation", icon: "💰" },
+    { id: "shipping", label: "Delivery Status", icon: "🚚" },
+    { id: "sales", label: "Promotion Verification", icon: "🏷️" },
   ];
 
   return (
     <div className="admin-page fade-in">
       <h1>Administration</h1>
-      <p>Gérez les aspects administratifs de votre boutique</p>
+      <p>Manage the administrative aspects of your store</p>
 
       <div className="admin-sections">
         <div className="section-tabs">
@@ -37,21 +37,21 @@ const AdminPage = () => {
         <div className="section-content">
           {activeSection === "tax" && (
             <div className="admin-section">
-              <h2>Calcul des Taxes</h2>
+              <h2>Tax Calculation</h2>
               <TaxCalculator />
             </div>
           )}
 
           {activeSection === "shipping" && (
             <div className="admin-section">
-              <h2>Mise à jour du Statut de Livraison</h2>
+              <h2>Delivery Status Update</h2>
               <ShippingStatusUpdater />
             </div>
           )}
 
           {activeSection === "sales" && (
             <div className="admin-section">
-              <h2>Vérification des Promotions</h2>
+              <h2>Promotion Verification</h2>
               <SaleChecker />
             </div>
           )}
