@@ -1,0 +1,48 @@
+/* Footer principal */
+.footer {
+  background: #6f4e37; /* brun café */
+  color: white;
+  padding: 40px 20px 20px;
+  margin-top: 40px;
+}
+
+/* Conteneur en colonnes */
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Chaque section */
+.footer-section h4,
+.footer-section h5 {
+  margin-bottom: 10px;
+  color: #f1c40f; /* jaune doré pour contraster */
+}
+
+.footer-section p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Ligne de bas de page */
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+}
