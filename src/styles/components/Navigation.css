@@ -1,16 +1,30 @@
-/* Conteneur principal */
+/* === Layout global === */
+.app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Conteneur principal avec sidebar + contenu */
+.app-body {
+  display: flex;
+  flex: 1;
+}
+
+/* === Sidebar Navigation === */
 .navigation {
   background: #f8f8f8;
   border-right: 1px solid #ddd;
-  min-height: 100vh;
   width: 220px;
   padding: 20px 15px;
   position: fixed;
   top: 0;
   left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  transition: all 0.3s ease;
 }
 
-/* En-tête de la nav */
 .nav-header {
   margin-bottom: 20px;
   text-align: center;
@@ -22,7 +36,6 @@
   margin: 0;
 }
 
-/* Liste */
 .nav-list {
   list-style: none;
   padding: 0;
@@ -33,7 +46,6 @@
   margin-bottom: 12px;
 }
 
-/* Liens */
 .nav-link {
   display: flex;
   align-items: center;
@@ -46,20 +58,49 @@
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Icône */
 .nav-icon {
   font-size: 1.2rem;
 }
 
-/* État normal */
 .nav-link:hover {
   background: #eee;
   color: #6f4e37;
 }
 
-/* Lien actif */
 .nav-link.active {
   background: #6f4e37;
   color: white;
   font-weight: bold;
+}
+
+/* === Contenu principal (à droite de la nav) === */
+.main-content {
+  margin-left: 220px; /* laisse place au menu */
+  flex: 1;
+  padding: 20px;
+  background: #fafafa;
+}
+
+/* === Responsive : nav en haut sur mobile === */
+@media (max-width: 768px) {
+  .navigation {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .nav-list {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .nav-item {
+    margin-bottom: 0;
+  }
 }

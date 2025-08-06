@@ -46,3 +46,18 @@
     text-align: center;
   }
 }
+
+/* Forcer le body et le html à occuper 100% de la hauteur */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Le contenu prend tout l’espace dispo */
+.main-content {
+  flex: 1;
+}
