@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import productService from "../../services/productService";
 import LoadingSpinner from "../common/LoadingSpinner";
+import ErrorMessage from "../common/ErrorMessage";
 import "../../styles/components/ProductManager.css";
 
 const ProductList = ({
   products: externalProducts,
   loading: externalLoading,
+  onEdit,
+  onDelete: externalOnDelete,
 }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,11 +27,13 @@ const ProductList = ({
     setError("");
 
     try {
-      const response = await axios.get("/products");
-      setProducts(response.data);
+      const response = await productService.getAllProducts();
+      console.log("Produits récupérés:", response);
+      setProducts(response || []);
     } catch (error) {
-      setError("Error loading products: " + error.message);
-      console.error("Error:", error);
+      const errorMessage = error.message || "Error loading products";
+      setError(errorMessage);
+      console.error("Error loading products:", error);
     } finally {
       setLoading(false);
     }
@@ -37,114 +42,410 @@ const ProductList = ({
   const handleDelete = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`/products/${productId}`);
-        setProducts((prev) => prev.filter((p) => p.id !== productId));
+        await productService.deleteProduct(productId);
+        setProducts((prev) =>
+          prev.filter((p) => (p.id || p.idproduct) !== productId)
+        );
+
+        // Appeler la fonction de suppression externe si fournie
+        if (externalOnDelete) {
+          externalOnDelete(productId);
+        }
       } catch (error) {
         setError("Error deleting product: " + error.message);
       }
     }
   };
 
+  const handleEdit = (product) => {
+    if (onEdit) {
+      onEdit(product);
+    } else {
+      console.log("Edit product:", product);
+      // You can add your edit logic here
+    }
+  };
+
+  // Simple ErrorMessage component if not available
+  const SimpleErrorMessage = ({ message, onClose }) => {
+    if (!message) return null;
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "12px 15px",
+          margin: "10px 0",
+          backgroundColor: "#f8d7da",
+          border: "1px solid #f5c6cb",
+          borderLeft: "4px solid #dc3545",
+          borderRadius: "5px",
+          color: "#721c24",
+          fontSize: "14px",
+        }}
+      >
+        <span>❌</span>
+        <span style={{ flex: 1 }}>{message}</span>
+        {onClose && (
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#721c24",
+              cursor: "pointer",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
+          >
+            ×
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  // Composant LoadingSpinner simple si pas disponible
+  const SimpleLoadingSpinner = () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "40px",
+      }}
+    >
+      <div
+        style={{
+          width: "40px",
+          height: "40px",
+          border: "4px solid #f3f3f3",
+          borderTop: "4px solid #007bff",
+          borderRadius: "50%",
+          animation: "spin 1s linear infinite",
+        }}
+      ></div>
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
+    </div>
+  );
+
   if (loading || externalLoading) {
-    return <LoadingSpinner />;
+    return LoadingSpinner ? <LoadingSpinner /> : <SimpleLoadingSpinner />;
   }
 
   return (
     <div className="product-list">
-      {error && <div className="alert alert-error mb-3">{error}</div>}
+      {error &&
+        (ErrorMessage ? (
+          <ErrorMessage message={error} onClose={() => setError("")} />
+        ) : (
+          <SimpleErrorMessage message={error} onClose={() => setError("")} />
+        ))}
 
-      <div className="list-header flex-between mb-3">
+      <div
+        className="list-header"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
         <h3>Products ({products.length})</h3>
-        <button onClick={fetchProducts} className="btn btn-secondary">
-          🔄 Refresh
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={fetchProducts}
+            className="btn btn-secondary"
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#6c757d",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            🔄 Refresh
+          </button>
+        </div>
       </div>
 
       {products.length === 0 ? (
-        <div className="no-data">
-          <p>No products found</p>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "40px",
+            backgroundColor: "#f8f9fa",
+            borderRadius: "8px",
+            border: "1px solid #dee2e6",
+          }}
+        >
+          <p style={{ fontSize: "18px", color: "#6c757d", margin: 0 }}>
+            😕 No products found
+          </p>
+          <button
+            onClick={fetchProducts}
+            style={{
+              marginTop: "15px",
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Recharger
+          </button>
         </div>
       ) : (
-        <div className="table-container">
-          <table className="table">
-            <thead>
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              backgroundColor: "white",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              borderRadius: "8px",
+              overflow: "hidden",
+            }}
+          >
+            <thead style={{ backgroundColor: "#f8f9fa" }}>
               <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  ID
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Image
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Name
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Description
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Price
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Stock
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "left",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Status
+                </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "center",
+                    borderBottom: "1px solid #dee2e6",
+                  }}
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr key={product.id || product.idproduct}>
-                  <td>{product.id || product.idproduct}</td>
-                  <td>
-                    {product.productimage ? (
-                      <img
-                        src={`/images/products/${product.productimage}`}
-                        alt={product.productname}
-                        className="product-thumbnail"
-                        onError={(e) => {
-                          e.target.src = "/images/placeholder.jpg";
+              {products.map((product, index) => {
+                const productId = product.id || product.idproduct;
+                const stockInfo = productService.formatStock(product.stock);
+                const statusInfo = productService.getProductStatus(product);
+
+                return (
+                  <tr
+                    key={productId || index}
+                    style={{ borderBottom: "1px solid #dee2e6" }}
+                  >
+                    <td style={{ padding: "12px" }}>{productId}</td>
+                    <td style={{ padding: "12px" }}>
+                      {product.productimage ? (
+                        <img
+                          src={productService.getImageUrl(product.productimage)}
+                          alt={product.productName}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                            borderRadius: "4px",
+                            border: "1px solid #dee2e6",
+                          }}
+                          onError={(e) => {
+                            e.target.src = "/images/placeholder.jpg";
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            backgroundColor: "#f8f9fa",
+                            border: "1px solid #dee2e6",
+                            borderRadius: "4px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "20px",
+                          }}
+                        >
+                          📷
+                        </div>
+                      )}
+                    </td>
+                    <td style={{ padding: "12px", fontWeight: "bold" }}>
+                      {product.productName}
+                    </td>
+                    <td
+                      style={{ padding: "12px", maxWidth: "200px" }}
+                      title={product.description}
+                    >
+                      {productService.truncateDescription(
+                        product.description,
+                        50
+                      )}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        fontWeight: "bold",
+                        color: "#28a745",
+                      }}
+                    >
+                      {productService.formatPrice(product.price)}
+                    </td>
+                    <td style={{ padding: "12px" }}>
+                      <span
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          backgroundColor: stockInfo.isLow
+                            ? "#fff3cd"
+                            : "#d4edda",
+                          color: stockInfo.isLow ? "#856404" : "#155724",
+                          border: `1px solid ${
+                            stockInfo.isLow ? "#ffeaa7" : "#c3e6cb"
+                          }`,
                         }}
-                      />
-                    ) : (
-                      <div className="no-image">📷</div>
-                    )}
-                  </td>
-                  <td className="font-weight-bold">{product.productname}</td>
-                  <td className="description-cell" title={product.description}>
-                    {product.description?.substring(0, 50)}
-                    {product.description?.length > 50 ? "..." : ""}
-                  </td>
-                  <td className="price-cell">
-                    ${parseFloat(product.price || 0).toFixed(2)}
-                  </td>
-                  <td>
-                    <span
-                      className={`stock-badge ${
-                        product.stock < 10 ? "low-stock" : ""
-                      }`}
-                    >
-                      {product.stock || 0}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`badge ${
-                        product.active ? "badge-success" : "badge-danger"
-                      }`}
-                    >
-                      {product.active ? "Actif" : "Inactif"}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="action-buttons">
-                      <button
-                        className="btn-icon btn-edit"
-                        title="Modifier"
-                        onClick={() => console.log("Edit product:", product.id)}
                       >
-                        ✏️
-                      </button>
-                      <button
-                        className="btn-icon btn-delete"
-                        title="Supprimer"
-                        onClick={() =>
-                          handleDelete(product.id || product.idproduct)
-                        }
+                        {stockInfo.display}
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px" }}>
+                      <span
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          backgroundColor:
+                            statusInfo.status === "active"
+                              ? "#d4edda"
+                              : "#f8d7da",
+                          color: statusInfo.color,
+                          border: `1px solid ${
+                            statusInfo.status === "active"
+                              ? "#c3e6cb"
+                              : "#f5c6cb"
+                          }`,
+                        }}
                       >
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {statusInfo.label}
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px", textAlign: "center" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "5px",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <button
+                          onClick={() => handleEdit(product)}
+                          title="Modifier"
+                          style={{
+                            background: "none",
+                            border: "1px solid #007bff",
+                            borderRadius: "4px",
+                            padding: "5px 8px",
+                            cursor: "pointer",
+                            fontSize: "14px",
+                          }}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={() => handleDelete(productId)}
+                          title="Supprimer"
+                          style={{
+                            background: "none",
+                            border: "1px solid #dc3545",
+                            borderRadius: "4px",
+                            padding: "5px 8px",
+                            cursor: "pointer",
+                            fontSize: "14px",
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
